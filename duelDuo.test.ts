@@ -20,17 +20,28 @@ test('Title shows up when page loads', async () => {
 })
 
 test('Draw button displays div with id = choices', async () => {
-    const drawButton = await driver.findElement(By.id('draw')).click()
-    const choicesDiv = await driver.findElement(By.id('choices'))
-    const displayed = await choicesDiv.isDisplayed()
+    await driver.findElement(By.id('draw')).click()
+    const choices = await driver.findElement(By.id('choices'))
+    const displayed = await choices.isDisplayed()
     expect(displayed).toBe(true)
-    await driver.sleep(3000)
 })
 
 test('Add to Duo displays player-duo div', async() => {
-    const addToDuoButton = await driver.findElement(By.id('#bot-btn')).click()
-    const playerDuoDiv = await driver.findElement(By.id('player-duo'))
-    const displayed = await playerDuoDiv.isDisplayed()
+    await driver.findElement(By.id('draw')).click()
+    await driver.findElement(By.xpath('(//button[text()="Add to Duo"])[1]')).click()
+    const playerDuo = await driver.findElement(By.id('player-duo'))
+    const displayed = await playerDuo.isDisplayed()
     expect(displayed).toBe(true)
-    await driver.sleep(3000)
+})
+
+test('Check that when bot is removed from duo, that is goes back to "choices"', async () =>{
+    await driver.findElement(By.id("draw")).click();
+    await driver.findElement(By.xpath('(//button[text()="Add to Duo"])[1]')).click()
+    await driver.findElement(By.xpath('(//button[text()="Remove from Duo"])')).click()
+
+    const returnedCard = await driver.findElement(By.xpath('(//div[@class="bot-card outline"]p[5])'))
+
+    const displayed = await returnedCard.isDisplayed()
+
+    expect(displayed).toBe(true)
 })
